@@ -7,20 +7,20 @@
 
 import Foundation
 
+for i in 1...10 {
+    print("running \(i)")
+    usleep(200_000)
+        
+    let task = URLSession.shared.webSocketTask(with: URL(string: "ws://127.0.0.1:9000")!)
+    task.resume()
+    
+    let textMessage = URLSessionWebSocketTask.Message.string("Iteration \(i)")
 
-// Create a websocket with a URL
-let task = URLSession.shared.webSocketTask(with: URL(string: "ws://127.0.0.1:9000")!)
-// Connect, handles handshake
-task.resume()
+    task.send(textMessage) { error in /* Handle error */ }
+    
+    usleep(200_000)
+    
+    task.cancel(with: .goingAway, reason: "ooops".data(using: .utf8))
+}
 
-// Send "Hello!" to the server
-let textMessage = URLSessionWebSocketTask.Message.string("Hello")
-task.send(textMessage) { error in /* Handle error */ }
-
-usleep(200_000)
-
-// Close the socket
-task.cancel(with: .goingAway, reason: "ooops".data(using: .utf8))
-
-
-sleep(10)
+sleep(1)
