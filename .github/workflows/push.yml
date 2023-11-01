@@ -13,7 +13,8 @@ jobs:
           java-version: 17
       - name: build
         run: |
-          ./server/gradlew -p server runServer&
+          ./server/gradlew -p server jar
+          ./server/gradlew -p server runServer &
           sleep 10
           cd test.ws
           xcodebuild -scheme test.ws  build SYMROOT=.
